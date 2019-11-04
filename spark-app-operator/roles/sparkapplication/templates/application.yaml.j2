@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spark-application-{{ app_ops }}
+  namespace: {{ namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spark-application-{{ app_ops }}
+  template:
+    metadata:
+      name: spark-application-{{ app_ops }}
+      labels:
+        app: spark-application-{{ app_ops }}
+    spec:
+      containers:
+      - name: spark-application
+        image: adrian555/run-spark-app:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: SPARK_MASTER
+          value: {{ spark_master }}
+        - name: APP_NAME
+          value: {{ app_name }}
+        - name: APP_OPS
+          value: {{ app_ops }}
+        - name: APP_MAX_ITER
+          value: '{{ app_max_iter }}'

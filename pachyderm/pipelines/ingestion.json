@@ -1,0 +1,16 @@
+  
+{
+  "pipeline": {
+    "name": "ingestion"
+  },
+  "input": {
+    "pfs": {
+      "glob": "/*",
+      "repo": "titanic"
+    }
+  },
+  "transform": {
+    "cmd": [ "python", "/opt/app/pipeline.py", "ingestion" ],
+    "image": "adrian555/pach-run-spark:latest"
+  }
+}

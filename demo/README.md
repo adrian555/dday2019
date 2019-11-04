@@ -1,0 +1,1 @@
+The docker image for the SparkApplication run by spark-app-operator.

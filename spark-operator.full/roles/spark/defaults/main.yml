@@ -1,0 +1,4 @@
+---
+# defaults file for spark
+namespace: "{{ meta.namespace | default('default', true) }}"
+spark_cluster_name: "{{ lookup('env','SPARK_CLUSTER_NAME') | default('spark-cluster', true) }}"

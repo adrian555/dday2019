@@ -1,0 +1,104 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: '[{"apiVersion":"ibm.com/v1alpha1","kind":"Spark","metadata":{"name":"example-spark"},"spec":{"worker_size":1}}]'
+    capabilities: Basic Install
+    categories: "AI/Machine Learning"
+    description: "Apache Spark"
+    containerImage: adrian555/spark-operator:v0.0.1
+    support: IBM
+    certified: "false"
+    createdAt: 2019-10-03T08:00:00Z
+  name: spark-operator.v0.0.1
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions: 
+    owned:
+    - kind: Spark
+      name: sparks.ibm.com
+      version: v1alpha1
+      displayName: Spark operator
+      description: Apache Spark
+  description: Demo Spark operator to create a Spark Cluster on OpenShift.
+  displayName: Spark Operator
+  icon:
+    - mediatype: image/png
+      base64data: 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
+  install:
+    spec:
+      clusterPermissions:
+      - rules:
+        - apiGroups:
+          - '*'
+          resources:
+          - '*'
+          verbs:
+          - '*'
+        - nonResourceURLs:
+          - '*'
+          verbs:
+          - '*'
+        serviceAccountName: spark-operator
+      deployments:
+      - name: spark-operator
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              name: spark-operator
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                name: spark-operator
+            spec:
+              containers:
+              - command:
+                - /usr/local/bin/ao-logs
+                - /tmp/ansible-operator/runner
+                - stdout
+                image: adrian555/spark-operator:v0.0.1
+                imagePullPolicy: Always
+                name: ansible
+                resources: {}
+                volumeMounts:
+                - mountPath: /tmp/ansible-operator/runner
+                  name: runner
+                  readOnly: true
+              - env:
+                - name: WATCH_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.annotations['olm.targetNamespaces']
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: OPERATOR_NAME
+                  value: spark-operator
+                image: adrian555/spark-operator:v0.0.1
+                imagePullPolicy: Always
+                name: operator
+                resources: {}
+                volumeMounts:
+                - mountPath: /tmp/ansible-operator/runner
+                  name: runner
+              serviceAccountName: spark-operator
+              volumes:
+              - emptyDir: {}
+                name: runner
+    strategy: deployment
+  installModes:
+  - supported: true
+    type: OwnNamespace
+  - supported: true
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  maturity: alpha
+  provider: {}
+  version: 0.0.1

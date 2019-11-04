@@ -1,0 +1,32 @@
+docker run --name spark-master -h spark-master adrian555/spark:v2.4.4
+docker run --name spark-worker-1 --link spark-master:spark-master --env RUN_SPARK_AS=slave --env SPARK_MASTER="spark://spark-master:7077" adrian555/spark:v2.4.4
+
+To get your user password run:
+
+    PGPASSWORD=$(kubectl get secret --namespace default my-postgres-ibm-postgres-dev -o jsonpath="{.data.password}" | base64 --decode; echo)
+
+To connect to your database run the following command (using the env variable from above):
+
+   kubectl run my-postgres-ibm-postgres-dev-client --rm --tty -i --image postgres \
+   --env "PGPASSWORD=$PGPASSWORD" \
+   --command -- psql -U postgres \
+   -h my-postgres-ibm-postgres-dev postgres
+
+To connect to your database directly from outside the K8s cluster:
+     PGHOST=$(kubectl get nodes --namespace default -o jsonpath='{.items[0].status.addresses[0].address}')
+     PGPORT=$(kubectl get svc --namespace default my-postgres-ibm-postgres-dev -o jsonpath='{.spec.ports[0].nodePort}')
+
+psql postgres://postgres:7iFo7jahBx@master0:32282
+
+import os
+
+parts = ["header"]
+for dirpath, dirs, files in os.walk("/pfs/titanic"):
+  for file in files:
+    if file.startswith('part'):
+      parts.append(file)  
+
+concat = ''.join([open(f).read() for f in parts])
+f = open('/tmp/train.csv', 'w')
+f.write(concat)
+f.close()

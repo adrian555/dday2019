@@ -1,0 +1,47 @@
+FROM openjdk:8-alpine
+
+ARG version=2.4.4
+ARG spark=spark-2.4.4-bin-hadoop2.7
+
+RUN set -ex && \
+    apk upgrade --no-cache && \
+    ln -s /lib /lib64 && \
+    apk add --no-cache bash tini libc6-compat linux-pam nss curl && \
+    mkdir -p /opt/spark && \
+    wget -O /tmp/${spark}.tgz http://apache.mirrors.hoobly.com/spark/spark-${version}/${spark}.tgz && \
+    tar zxvf /tmp/${spark}.tgz -C /tmp && \
+    cp -r /tmp/${spark}/jars /opt/spark && \
+    cp -r /tmp/${spark}/bin /opt/spark && \
+    cp -r /tmp/${spark}/sbin /opt/spark && \
+    mkdir -p /opt/spark/work-dir && \
+    touch /opt/spark/RELEASE && \
+    rm /bin/sh && \
+    ln -sv /bin/bash /bin/sh && \
+    echo "auth required pam_wheel.so use_uid" >> /etc/pam.d/su && \
+    chgrp root /etc/passwd && chmod ug+rw /etc/passwd
+
+COPY demo.py /opt/spark/work-dir
+
+RUN rm -rf /tmp/${spark}.tgz /tmp/${spark}
+
+ENV SPARK_HOME /opt/spark
+
+ENV SPARK_MASTER_PORT 7077
+ENV SPARK_MASTER_WEBUI_PORT 8080
+ENV SPARK_MASTER_LOG /opt/spark/logs
+
+ENV SPARK_NO_DAEMONIZE yes
+
+ENV SPARK_WORKER_CORES=1
+ENV SPARK_WORKER_MEMORY=4G
+
+ENV SPARK_MASTER "spark://spark-master:7077"
+ENV SPARK_WORKER_WEBUI_PORT 8081
+
+EXPOSE ${SPARK_MASTER_PORT}
+EXPOSE ${SPARK_MASTER_WEBUI_PORT}
+EXPOSE ${SPARK_WORKER_WEBUI_PORT}
+
+WORKDIR /opt/spark/work-dir
+
+CMD ["sh", "-c", "sleep 1d"]

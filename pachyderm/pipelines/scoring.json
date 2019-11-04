@@ -1,0 +1,20 @@
+  
+{
+  "pipeline": {
+    "name": "scoring"
+  },
+  "input": {
+    "pfs": {
+      "glob": "/*",
+      "repo": "training"
+    }
+  },
+  "transform": {
+    "cmd": [ "python", "/opt/app/deploy.py" ],
+    "image": "adrian555/pach-run-spark:latest",
+    "env": {
+      "SPARK_MASTER": "master0.ddoc.os.fyre.ibm.com:30299",
+      "APP_OPS": "scoring"
+    }
+  }
+}

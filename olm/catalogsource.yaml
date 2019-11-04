@@ -1,0 +1,11 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: spark-operator-catalog
+  namespace: openshift-operator-lifecycle-manager
+spec:
+  sourceType: grpc
+  image: adrian555/spark-operator-registry:v0.0.1
+  imagePullPolicy: Always
+  displayName: DeveloperDay Operators
+  publisher: IBM

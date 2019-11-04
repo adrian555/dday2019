@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: demo-operators-admin-ep
+  labels: 
+    olm.opgroup.permissions/aggregate-to-admin: demo-operators
+rules:
+- apiGroups:
+  - packages.operators.coreos.com
+  resources:
+  - packagemanifests
+  verbs:
+  - '*'

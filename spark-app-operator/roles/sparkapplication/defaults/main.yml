@@ -1,0 +1,3 @@
+---
+# defaults file for sparkapplication
+namespace: "{{ meta.namespace | default('default', true) }}"

@@ -1,0 +1,1 @@
+This is the operator to run a SparkApplication application. Each application is run with pyspark v2.4.4. Currently the code has been provided to run the `pyspark.ml` to process dataset from csv file, to train a GBT classification model and to test the model.

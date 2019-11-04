@@ -1,0 +1,14 @@
+apiVersion: ibm.com/v1alpha1
+kind: SparkApplication
+metadata:
+  name: spark-scoring
+annotations:
+  ansible.operator-sdk/reconcile-period: 0
+spec:
+  # Add fields here
+  size: 1
+  spark_master: spark://master0.ddoc.os.fyre.ibm.com:32701
+  app_name: demo
+  pvc_name: spark-worker-pvc
+  app_ops: scoring # processing|training|scoring
+  app_max_iter: "10"

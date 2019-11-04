@@ -1,0 +1,1 @@
+This is the operator to create a standalone v2.4.4 Spark cluster with one master and a number of workers. The number of workers can be specified and/or late modified through operator or the Spark CustomResource.

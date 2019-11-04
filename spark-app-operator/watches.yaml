@@ -1,0 +1,6 @@
+---
+- version: v1alpha1
+  group: ibm.com
+  kind: SparkApplication
+  role: /opt/ansible/roles/sparkapplication
+  reconcilePeriod: 0

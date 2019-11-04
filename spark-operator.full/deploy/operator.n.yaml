@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spark-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: spark-operator
+  template:
+    metadata:
+      labels:
+        name: spark-operator
+    spec:
+      serviceAccountName: spark-operator
+      containers:
+        - name: ansible
+          command:
+          - /usr/local/bin/ao-logs
+          - /tmp/ansible-operator/runner
+          - stdout
+          # Replace this with the built image name
+          image: "adrian555/spark-operator:v0.0.1"
+          imagePullPolicy: Always
+          volumeMounts:
+          - mountPath: /tmp/ansible-operator/runner
+            name: runner
+            readOnly: true
+        - name: operator
+          # Replace this with the built image name
+          image: "adrian555/spark-operator:v0.0.1"
+          imagePullPolicy: Always
+          volumeMounts:
+          - mountPath: /tmp/ansible-operator/runner
+            name: runner
+          env:
+            - name: WATCH_NAMESPACE
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "spark-operator"
+            - name: SPARK_CLUSTER_NAME
+              value: "my-spark-cluster"
+      volumes:
+        - name: runner
+          emptyDir: {}

@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spark-master
+  namespace: {{ namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spark-master
+  template:
+    metadata:
+      name: spark-master
+      labels:
+        app: spark-master
+    spec:
+      containers:
+      - name: spark-master
+        image: adrian555/spark:v2.4.4
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 6
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 6
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        ports:
+        - containerPort: 7077
+          name: spark-master
+          protocol: TCP
+        - containerPort: 8080
+          name: spark-webui
+          protocol: TCP
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - curl -s localhost:8080 | grep -e Status.*ALIVE
+          failureThreshold: 3
+          initialDelaySeconds: 2
+          periodSeconds: 7
+          successThreshold: 1
+          timeoutSeconds: 1

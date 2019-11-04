@@ -1,0 +1,10 @@
+apiVersion: ibm.com/v1alpha1
+kind: Spark
+metadata:
+  name: demo-spark  # these can be referenced as meta.name in ansible...
+annotations:
+  ansible.operator-sdk/reconcile-period: "10m"
+spec:
+  # Add fields here, 
+  # these are extra varialbes to pass as facts to ansible
+  worker_size: 1

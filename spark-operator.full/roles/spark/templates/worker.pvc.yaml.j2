@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spark-worker
+  namespace: {{ namespace }}
+spec:
+  replicas: {{ worker_size }}
+  selector:
+    matchLabels:
+      app: spark-worker
+  template:
+    metadata:
+      name: spark-worker
+      labels:
+        app: spark-worker
+    spec:
+      volumes:
+      - name: pfs
+        persistentVolumeClaim:
+          claimName: spark-worker-pvc
+      containers:
+      - env:
+        - name: RUN_SPARK_AS
+          value: slave
+        - name: SPARK_MASTER
+          value: spark://{{ spark_cluster_name }}:7077
+        image: adrian555/spark:v2.4.4
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 6
+          httpGet:
+            path: /
+            port: 8081
+            scheme: HTTP
+          initialDelaySeconds: 11
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: spark-worker
+        volumeMounts:
+        - mountPath: /mnt/pfs
+          name: pfs
+        ports:
+        - containerPort: 8081
+          name: spark-webui
+          protocol: TCP
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - curl -s localhost:8081 | grep -e 'Master URL:.*spark://' || echo Unable
+              to connect to the Spark master at $SPARK_MASTER
+          failureThreshold: 3
+          initialDelaySeconds: 7
+          periodSeconds: 7
+          successThreshold: 1
+          timeoutSeconds: 1

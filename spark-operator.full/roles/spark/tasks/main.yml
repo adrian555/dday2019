@@ -1,0 +1,76 @@
+---
+# tasks file for spark
+- name: generate spark-master deployment yaml
+  template:
+    src: master.yaml.j2
+    dest: master.yaml
+    mode: 0644
+
+- name: deploy spark-master
+  k8s:
+    state: present
+    kind: Deployment
+    name: spark-master
+    namespace: "{{ namespace }}"
+    src: master.yaml
+
+- name: generate spark-client deployment yaml
+  template:
+    src: worker.yaml.j2
+    dest: worker.yaml
+    mode: 0644
+  when: pv_name is undefined
+
+- name: generate pv and pvc yaml
+  template:
+    src: pvc.yaml.j2
+    dest: pvc.yaml
+    mode: 0644
+  when: pv_name is defined
+
+- name: deploy pv and pvc
+  k8s:
+    state: present
+    kind: PersistentVolume
+    name: "{{ pv_name }}"
+    namespace: "{{ namespace }}"
+    src: pvc.yaml
+  when: pv_name is defined
+
+- name: deploy pv and pvc
+  k8s:
+    state: present
+    kind: PersistentVolumeClaim
+    name: spark-worker-pvc
+    namespace: "{{ namespace }}"
+    src: pvc.yaml
+  when: pv_name is defined  
+
+- name: generate spark-client deployment yaml
+  template:
+    src: worker.pvc.yaml.j2
+    dest: worker.yaml
+    mode: 0644
+  when: pv_name is defined
+
+- name: deploy spark-worker
+  k8s:
+    state: present
+    kind: Deployment
+    name: spark-worker
+    namespace: "{{ namespace }}"
+    src: worker.yaml
+
+- name: generate spark-cluster service yaml
+  template:
+    src: service.yaml.j2
+    dest: service.yaml
+    mode: 0644
+
+- name: deploy spark-cluster service
+  k8s:
+    state: present
+    kind: Service
+    name: spark-cluster
+    namespace: "{{ namespace }}"
+    src: service.yaml

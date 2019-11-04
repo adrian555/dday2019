@@ -1,0 +1,23 @@
+---
+# tasks file for sparkapplication
+- name: generate spark-application deployment yaml
+  template:
+    src: application.yaml.j2
+    dest: application.yaml
+    mode: 0644
+  when: pvc_name is undefined
+
+- name: generate spark-application deployment yaml
+  template:
+    src: application.pvc.yaml.j2
+    dest: application.yaml
+    mode: 0644
+  when: pvc_name is defined
+
+- name: deploy spark-application
+  k8s:
+    state: present
+    kind: Deployment
+    name: spark-master
+    namespace: "{{ namespace }}"
+    src: application.yaml

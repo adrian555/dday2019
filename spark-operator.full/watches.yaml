@@ -1,0 +1,6 @@
+---
+- version: v1alpha1
+  group: ibm.com
+  kind: Spark
+  role: /opt/ansible/roles/spark
+  reconcilePeriod: 15m  # interval b/w role rerun
